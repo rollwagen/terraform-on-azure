@@ -48,7 +48,6 @@ resource "azurerm_resource_group" "rg-main" {
 module "vnet-main" {
   source              = "Azure/vnet/azurerm"
   resource_group_name = azurerm_resource_group.rg-main.name
-  #location            = var.location
   vnet_name           = var.resource_group_name
   address_space       = var.vnet_cidr_range
   subnet_prefixes     = var.subnet_prefixes
