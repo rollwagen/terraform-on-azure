@@ -13,8 +13,8 @@ variable "location" {
 
 
 variable "vnet_cidr_range" {
-  type    = string
-  default = "10.0.0.0/16"
+  type    = list
+  default = ["10.0.0.0/16"]
 }
 
 variable "subnet_prefixes" {
@@ -32,17 +32,23 @@ variable "subnet_names" {
 #############################################################################
 
 provider "azurerm" {
-  version = "~> 1.0"
+  version = "~> 2.0"
+  features {}
 }
 
 #############################################################################
 # RESOURCES
 #############################################################################
 
+resource "azurerm_resource_group" "rg-main" {
+  name     = var.resource_group_name
+  location = var.location
+}
+
 module "vnet-main" {
   source              = "Azure/vnet/azurerm"
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  resource_group_name = azurerm_resource_group.rg-main.name
+  #location            = var.location
   vnet_name           = var.resource_group_name
   address_space       = var.vnet_cidr_range
   subnet_prefixes     = var.subnet_prefixes
