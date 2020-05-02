@@ -13,8 +13,8 @@ variable "location" {
 }
 
 variable "vnet_cidr_range" {
-  type    = string
-  default = "10.1.0.0/16"
+  type    = list
+  default = ["10.1.0.0/16"]
 }
 
 variable "sec_subnet_prefixes" {
@@ -38,11 +38,12 @@ data "azurerm_subscription" "current" {}
 #############################################################################
 
 provider "azurerm" {
-  version = "~> 1.0"
+  version = "~> 2.0"
+  features {}
 }
 
 provider "azuread" {
-
+  version = "~> 0.8"
 }
 
 #############################################################################
@@ -63,7 +64,6 @@ resource "azurerm_resource_group" "sec" {
 module "vnet-sec" {
   source              = "Azure/vnet/azurerm"
   resource_group_name = azurerm_resource_group.sec.name
-  location            = var.location
   vnet_name           = azurerm_resource_group.sec.name
   address_space       = var.vnet_cidr_range
   subnet_prefixes     = var.sec_subnet_prefixes
